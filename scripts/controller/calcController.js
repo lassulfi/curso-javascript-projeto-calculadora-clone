@@ -29,6 +29,8 @@ class CalcController{
 
     clearAll(){
         this._operation = [];
+        this._lastNumber = '';
+        this._lastOperator = '';
         this.setLastNumberToDisplay();
     }
 
@@ -122,9 +124,6 @@ class CalcController{
             if(this.isOperator(value)){
                 //Change the operator
                 this.setLastOperation(value);
-            } else if(isNaN(value)) {
-                //In case the value is a point or something else
-                console.log('Something else:: ' + value);
             } else {
                 //It's a number
                 this.pushOperation(value);
@@ -138,11 +137,22 @@ class CalcController{
             } else {
                 //Number
             let newValue = this.getLastOperation().toString() + value.toString();
-            this.setLastOperation(parseInt(newValue));
+            this.setLastOperation(parseFloat(newValue));
             //update Display
             this.setLastNumberToDisplay();
             }
         }
+    }
+
+    addDot(){
+        let lastOperation = this.getLastOperation();
+        if(this.isOperator(lastOperation) || !lastOperation){
+            this.pushOperation('0.');
+        } else {
+            this.setLastOperation(lastOperation.toString() + '.');
+        }
+
+        this.setLastNumberToDisplay();
     }
 
     execBtn(value){
@@ -172,7 +182,7 @@ class CalcController{
                 this.calc();
                 break;
             case 'ponto':
-                this.addOperation('.');
+                this.addDot();
                 break;
             case '0':
             case '1':
